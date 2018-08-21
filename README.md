@@ -3,6 +3,6 @@ Recibe el nombre de un cliente, y emite un comprobante (en formato .pdf, generad
 
 Ejemplo de comprobante generado:
 
-[[https://raw.githubusercontent.com/blueautomatic/generador-comprobantes/master/ejemplo_comprobante_generado1.png|alt=generador-comprobantes]]
+[[https://github.com/blueautomatic/generador-comprobantes/blob/master/img/ejemplo_comprobante_generado1.png|alt=generador-comprobantes]]
 
-[[https://raw.githubusercontent.com/blueautomatic/generador-comprobantes/master/ejemplo_comprobante_generado2.png.png|alt=generador-comprobantes]]
+[[https://github.com/blueautomatic/generador-comprobantes/blob/master/img/ejemplo_comprobante_generado2.png.png|alt=generador-comprobantes]]
