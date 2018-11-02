@@ -102,145 +102,139 @@ class VentanaPrincipal(QMainWindow):
                 pass
 
     def imprimir_comprobante(self):
-        if not self.comprobar_columna_precio():
-            pass
-        else:
-            story = []
+        self.comprobar_columna_precio()
 
-            fec_hoy = datetime.date.today()
-            hoy = fec_hoy.strftime("%d/%m/%Y")
-            nombre_cliente = str(self.obj_main.lne_mostrar_cliente.text())
+        documento_pdf = []
 
-            style_sheet = getSampleStyleSheet()
-            img = Image("python_logo.png", 30, 30)
+        fec_hoy = datetime.date.today()
+        hoy = fec_hoy.strftime("%d/%m/%Y")
+        nombre_cliente = str(self.obj_main.lne_mostrar_cliente.text())
 
-            story.append(Spacer(0, 50))
+        style_sheet = getSampleStyleSheet()
+        img = Image("python_logo.png", 30, 30)
 
-            estilo_total = ParagraphStyle('', fontSize=10, textColor='#000', rightIndent=0, alignment=TA_CENTER)
-            texto_secundario = ParagraphStyle('', fontSize=10, textColor='#000', alignment=TA_CENTER)
-            estilo_encabezado1 = ParagraphStyle('', fontSize=6, textColor='#000', alignment=TA_CENTER)
-            estilo_texto = ParagraphStyle('',
-                                          fontSize=8,
-                                          alignment=0,
-                                          spaceBefore=0,
-                                          spaceAfter=0,
-                                          # backColor = '#fff',
-                                          textColor='#000',
-                                          leftIndent=0)
+        documento_pdf.append(Spacer(0, 50))
 
-            encabezado1 = [Paragraph("<b>Calle Falsa 123 - Tel.: (2920) 321654 / Cel.: (2920) 15 513322</b><br/><b> "
-                                     + "C. de Patagones - Buenos Aires - E-mail: mimail@outlook.com</b>", estilo_encabezado1)]
+        estilo_monto_total = ParagraphStyle('', fontSize=10, textColor='#000', rightIndent=0, alignment=TA_CENTER)
+        estilo_encabezado_2 = ParagraphStyle('', fontSize=10, textColor='#000', alignment=TA_CENTER)
+        estilo_encabezado_1 = ParagraphStyle('', fontSize=6, textColor='#000', alignment=TA_CENTER)
+        estilo_texto = ParagraphStyle('', fontSize=8, alignment=0, spaceBefore=0, spaceAfter=0, textColor='#000',
+                                      leftIndent=0)
 
-            encabezado2a = [Paragraph("<b>COMPROBANTE N° " + str(123456789) + "</b>", texto_secundario)]
+        encabezado1 = [Paragraph("<b>Calle Falsa 123 - Tel.: (2920) 321654 / Cel.: (2920) 15 513322</b><br/><b> "
+                                 + "C. de Patagones - Buenos Aires - E-mail: mimail@outlook.com</b>",
+                                 estilo_encabezado_1)]
 
-            encabezado2b = [Paragraph("<b>Fecha:   " + str(hoy) + "</b>", texto_secundario)]
+        encabezado2a = [Paragraph("<b>COMPROBANTE N° " + str(123456789) + "</b>", estilo_encabezado_2)]
 
-            header = [[img, encabezado2a], [encabezado1, encabezado2b]]  # Tabla de 2 filas y 2 columnas
+        encabezado2b = [Paragraph("<b>Fecha:   " + str(hoy) + "</b>", estilo_encabezado_2)]
 
-            theader = Table(header, 242.5)
-            theader.setStyle(TableStyle([
-                ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.transparent),  # Setea todas las líneas interiores sin color
-                ('ALIGNMENT', (0, 0), (0, 0), 'CENTER'),  # Centra horizontalmente la imagen
-                ('TOPPADDING', (0, 0), (0, 0), 13),  # Padding superior de la celda
-                ('BOTTOMPADDING', (0, 1), (-1, 1), 13),  # Padding inferior de la celda
-                ('LINEBEFORE', (1, 0), (1, -1), 1, colors.black),  # Colorea solamente la línea del medio
-                ('BOX', (0, 0), (-1, -1), 1, colors.black),
-                ('BACKGROUND', (0, 0), (-1, 1), colors.transparent),
-                ('BACKGROUND', (1, 1), (-1, 1), colors.transparent),
-                ('VALIGN', (0, 1), (-1, 1), 'TOP')  # Alínea el texto de la celda bien cerca del borde superior de la misma
-            ]))
-            story.append(theader)
+        t_encabezado = [[img, encabezado2a], [encabezado1, encabezado2b]]  # Tabla de 2 filas y 2 columnas
 
-            story.append(Spacer(0, -17.5))
-            t_cliente = [[Paragraph('''<font size=8> <b> </b></font>''', style_sheet["BodyText"])],
-                         [Paragraph('<font size=8> <b>Cliente: ' + nombre_cliente + '</b></font>', estilo_texto)]]
+        tabla_encabezado = Table(t_encabezado, 242.5)
+        tabla_encabezado.setStyle(TableStyle([
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.transparent),  # Setea todas las líneas interiores sin color
+            ('ALIGNMENT', (0, 0), (0, 0), 'CENTER'),  # Centra horizontalmente la imagen
+            ('TOPPADDING', (0, 0), (0, 0), 13),  # Padding superior de la celda
+            ('BOTTOMPADDING', (0, 1), (-1, 1), 13),  # Padding inferior de la celda
+            ('LINEBEFORE', (1, 0), (1, -1), 1, colors.black),  # Colorea solamente la línea del medio
+            ('BOX', (0, 0), (-1, -1), 1, colors.black),
+            ('BACKGROUND', (0, 0), (-1, 1), colors.transparent),
+            ('BACKGROUND', (1, 1), (-1, 1), colors.transparent),
+            ('VALIGN', (0, 1), (-1, 1), 'TOP')  # Alínea el texto de la celda bien cerca del borde superior de la misma
+        ]))
+        documento_pdf.append(tabla_encabezado)
 
-            tcliente = Table(t_cliente, 485)
-            tcliente.setStyle(TableStyle([
+        documento_pdf.append(Spacer(0, -17.5))
+        t_cliente = [[Paragraph('''<font size=8> <b> </b></font>''', style_sheet["BodyText"])],
+                     [Paragraph('<font size=8> <b>Cliente: ' + nombre_cliente + '</b></font>', estilo_texto)]]
+
+        tabla_cliente = Table(t_cliente, 485)
+        tabla_cliente.setStyle(TableStyle([
+            ('INNERGRID', (0, 1), (-1, -1), 0.25, colors.black),
+            ('BOX', (0, 1), (-1, -1), 0.25, colors.black),
+            ('BACKGROUND', (0, 1), (-1, 1), colors.white)
+        ]))
+        documento_pdf.append(tabla_cliente)
+
+        trabajos = [[Paragraph('''<font size=9> <b> </b></font>''', style_sheet["BodyText"])],
+                    [Paragraph('''<font size=9> <b> </b>Trabajo realizado</font>''', estilo_texto),
+                     Paragraph('''<font size=9> <b> </b>Monto</font>''', estilo_texto),
+                     Paragraph('''<font size=9> <b> </b>Detalle</font>''', estilo_texto),
+                     Paragraph('''<font size=9> <b> </b>SUBTOTAL</font>''', estilo_texto)]]
+
+        tabla = self.obj_main.tbl_lista_trabajos_realizados
+        cantidad_filas = tabla.rowCount()
+        importe_total = 0
+
+        for item in range(cantidad_filas):
+            trabajo = tabla.item(item, self.columna_trabajo).text()  # Item es el número de fila; self.columna_trabajo es la columna
+            precio = tabla.item(item, self.columna_precio).text()
+            detalle = tabla.item(item, self.columna_descripcion).text()
+
+            importe_total = importe_total + int(precio)
+
+            estilotrabajo = " <font size=8>" + str(trabajo) + "</font>"
+            estiloprecio = " <font size=8>" + str(precio) + "</font>"
+            estilodetalle = " <font size=8>" + str(detalle) + "</font>"
+            estilosubtotal = " <font size=8>" + str(precio) + "</font>"
+
+            trabajos.append([Paragraph(estilotrabajo, estilo_texto),
+                             Paragraph(estiloprecio, estilo_texto),
+                             Paragraph(estilodetalle, estilo_texto),
+                             Paragraph(estilosubtotal, estilo_texto)])
+
+            tabla_lista_trabajos = Table(trabajos, (85, 40, 300, 60))
+            tabla_lista_trabajos.setStyle(TableStyle([
                 ('INNERGRID', (0, 1), (-1, -1), 0.25, colors.black),
-                ('BOX', (0, 1), (-1, -1), 0.25, colors.black),
+                ('BOX', (0, 1), (-1, -1), 0.25, colors.white),
                 ('BACKGROUND', (0, 1), (-1, 1), colors.white)
             ]))
-            story.append(tcliente)
 
-            trabajos = [[Paragraph('''<font size=9> <b> </b></font>''', style_sheet["BodyText"])],
-                        [Paragraph('''<font size=9> <b> </b>Trabajo realizado</font>''', estilo_texto),
-                         Paragraph('''<font size=9> <b> </b>Monto</font>''', estilo_texto),
-                         Paragraph('''<font size=9> <b> </b>Detalle</font>''', estilo_texto),
-                         Paragraph('''<font size=9> <b> </b>SUBTOTAL</font>''', estilo_texto)]]
+        documento_pdf.append(tabla_lista_trabajos)
 
-            tabla = self.obj_main.tbl_lista_trabajos_realizados
-            cantidad_filas = tabla.rowCount()
-            importe_total = 0
+        monto_total = [[Paragraph('''<font size=8> <b> </b></font>''', style_sheet["BodyText"]),
+                  Paragraph("", estilo_monto_total),
+                  Paragraph("", estilo_monto_total),
+                  Paragraph("<b>TOTAL: $" + str(importe_total) + " </b>", estilo_monto_total)]]
 
-            for item in range(cantidad_filas):
-                trabajo = tabla.item(item, self.columna_trabajo).text()  # Item es el número de fila; self.columna_trabajo es la columna
-                precio = tabla.item(item, self.columna_precio).text()
-                detalle = tabla.item(item, self.columna_descripcion).text()
+        importe_final = Table(monto_total, (65, 20, 300, 100))  # Tabla de 4 columnas para poder customizar más cómodamente la última celda, que tiene el total
 
-                importe_total = importe_total + int(precio)
+        importe_final.setStyle(TableStyle([
+            ('BOX', (-1, -1), (-1, -1), 0.25, colors.lightgrey),
+            ('BACKGROUND', (-1, -1), (-1, -1), colors.lightgrey)
+        ]))
+        documento_pdf.append(importe_final)
 
-                estilotrabajo = " <font size=8>" + str(trabajo) + "</font>"
-                estiloprecio = " <font size=8>" + str(precio) + "</font>"
-                estilodetalle = " <font size=8>" + str(detalle) + "</font>"
-                estilosubtotal = " <font size=8>" + str(precio) + "</font>"
+        documento_pdf.append(Spacer(0, 50))
 
-                trabajos.append([Paragraph(estilotrabajo, estilo_texto),
-                                 Paragraph(estiloprecio, estilo_texto),
-                                 Paragraph(estilodetalle, estilo_texto),
-                                 Paragraph(estilosubtotal, estilo_texto)])
+        # Duplicado
 
-                t_lista_trabajos = Table(trabajos, (85, 40, 300, 60))
-                t_lista_trabajos.setStyle(TableStyle([
-                    ('INNERGRID', (0, 1), (-1, -1), 0.25, colors.black),
-                    ('BOX', (0, 1), (-1, -1), 0.25, colors.white),
-                    ('BACKGROUND', (0, 1), (-1, 1), colors.white)
-                ]))
+        documento_pdf.append(tabla_encabezado)
+        documento_pdf.append(Spacer(0, -17.5))
+        documento_pdf.append(tabla_cliente)
+        documento_pdf.append(tabla_lista_trabajos)
+        documento_pdf.append(importe_final)
 
-            story.append(t_lista_trabajos)
+        # Define dónde se guardará el archivo
 
-            total = [[Paragraph('''<font size=8> <b> </b></font>''', style_sheet["BodyText"]),
-                      Paragraph("", estilo_total),
-                      Paragraph("", estilo_total),
-                      Paragraph("<b>TOTAL: $" + str(importe_total) + " </b>", estilo_total)]]
+        file_path = os.path.dirname(os.path.abspath(__file__)) + "/pdf/" + str(datetime.date.today())
 
-            importe_final = Table(total, (65, 20, 300, 100))  # Tabla de 4 columnas para poder customizar más cómodamente la última celda, que tiene el total
+        if not os.path.exists(file_path):
+            os.makedirs(file_path)
 
-            importe_final.setStyle(TableStyle([
-                ('BOX', (-1, -1), (-1, -1), 0.25, colors.lightgrey),
-                ('BACKGROUND', (-1, -1), (-1, -1), colors.lightgrey)
-            ]))
-            story.append(importe_final)
+        doc = SimpleDocTemplate(
+            file_path + "/comprobante_" + str(nombre_cliente) + "_" + str(datetime.date.today()) + ".pdf", pagesize=A4,
+            rightMargin=14, leftMargin=14, topMargin=5, bottomMargin=18)
+        doc.build(documento_pdf)
 
-            story.append(Spacer(0, 50))
+        QMessageBox.information(self, "Acción realizada", "Se ha generado el comprobante.")
 
-            # Duplicado
-
-            story.append(theader)
-            story.append(Spacer(0, -17.5))
-            story.append(tcliente)
-            story.append(t_lista_trabajos)
-            story.append(importe_final)
-
-            # Define dónde se guardará el archivo
-
-            file_path = os.path.dirname(os.path.abspath(__file__)) + "/pdf/" + str(datetime.date.today())
-
-            if not os.path.exists(file_path):
-                os.makedirs(file_path)
-
-            doc = SimpleDocTemplate(
-                file_path + "/comprobante_" + str(nombre_cliente) + "_" + str(datetime.date.today()) + ".pdf", pagesize=A4,
-                rightMargin=14, leftMargin=14, topMargin=5, bottomMargin=18)
-            doc.build(story)
-
-            QMessageBox.information(self, "Acción realizada", "Se ha generado el comprobante.")
-
-            if sys.platform == 'linux':
-                subprocess.call(["xdg-open", file_path + "/comprobante_" + str(nombre_cliente) + "_" + str(
-                    datetime.date.today()) + ".pdf"])
-            else:
-                os.startfile(file_path + "/comprobante_" + str(nombre_cliente) + "_" + str(datetime.date.today()) + ".pdf")
+        if sys.platform == 'linux':
+            subprocess.call(["xdg-open", file_path + "/comprobante_" + str(nombre_cliente) + "_" + str(
+                datetime.date.today()) + ".pdf"])
+        else:
+            os.startfile(file_path + "/comprobante_" + str(nombre_cliente) + "_" + str(datetime.date.today()) + ".pdf")
 
 
 app = QApplication(sys.argv)
