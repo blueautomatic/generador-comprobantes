@@ -3,7 +3,7 @@ Recibe el nombre de un cliente, y emite un comprobante (en formato .pdf, generad
 
 Ventana principal:
 
-![Alt text](https://raw.githubusercontent.com/blueautomatic/generador-comprobantes/master/ejemplo_mainwindow.png)
+![Alt text](https://raw.githubusercontent.com/blueautomatic/generador-comprobantes/master/ej_mainwindow.png)
 
 Ejemplo de comprobante generado:
 
