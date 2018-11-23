@@ -3,6 +3,7 @@ import os
 import re
 import subprocess
 import datetime
+from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QTableWidgetItem
 from PyQt5.QtCore import QPersistentModelIndex
 from mainwindow import Ui_MainWindow
@@ -105,7 +106,7 @@ class VentanaPrincipal(QMainWindow):
         cantidad_filas = tabla.rowCount()
         for item in range(cantidad_filas):
             if not re.match("^[0-9]*$", tabla.item(item, self.columna_precio).text()):
-                QMessageBox.critical(self, "Error", "Por favor, ingrese precio en cada fila de la tabla."
+                QMessageBox.critical(self, "Error", "Por favor, ingrese precio en cada fila de la tabla. "
                                                     "Solo se aceptan números en la columna precio.")
                 comprobar = False
             else:
@@ -128,11 +129,24 @@ class VentanaPrincipal(QMainWindow):
         if self.obj_main.lne_ingresar_cliente.text() == "":
             QMessageBox.information(self, "Advertencia", "Ingrese el nombre del cliente.")
         else:
-            confirmar = True
+            confirmar = False
             if self.comprobar_columna_descripcion() == False:
-                confirmar = QMessageBox.question(self, "Atención", 'Algunas filas tienen la celda "Detalle" vacía,'
-                                                                   '¿desea generar el comprobante?',
-                                           QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                msgBox = QMessageBox()
+                msgBox.setWindowTitle("Atención")
+                icon = QtGui.QIcon()
+                icon.addPixmap(QtGui.QPixmap("list.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                msgBox.setWindowIcon(icon)
+                msgBox.setText('Algunas filas tienen la celda "Detalle" vacía, ¿desea generar el comprobante?')
+                btn_no = QtWidgets.QPushButton('No')
+                msgBox.addButton(btn_no, msgBox.NoRole)
+                btn_si = QtWidgets.QPushButton('Sí')
+                msgBox.addButton(btn_si, msgBox.YesRole)
+                msgBox.setIcon(4)
+                msgBox.exec_()
+                if msgBox.clickedButton() == btn_si:
+                    confirmar = True
+                else:
+                    confirmar = False
             if confirmar == True:
                 if self.comprobar_columna_precio() == True:
                     documento_pdf = []
@@ -274,6 +288,11 @@ class VentanaPrincipal(QMainWindow):
 
 
 app = QApplication(sys.argv)
+
+translator = QtCore.QTranslator()
+translator.load(os.path.dirname(os.path.abspath(__file__)) + "/qt_es.qm")
+app.installTranslator(translator)
+
 window = VentanaPrincipal()
 window.show()
 app.exec_()
